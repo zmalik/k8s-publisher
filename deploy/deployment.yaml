@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-publisher
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: k8s-publisher-secrets
+type: Opaque
+data:
+  slack-api-token: eG94Yi= //replaceme echo 'SLACK_API_TOKEN' | base64
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: k8s-publisher
+  labels:
+    app: k8s-publisher
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: k8s-publisher
+    spec:
+      serviceAccount: k8s-publisher
+      containers:
+      - name: k8s-publisher
+        image: zmalikshxil/k8s-publisher:1.0
+        imagePullPolicy: IfNotPresent
+        env:
+         - name: SLACK_API_TOKEN
+           valueFrom:
+             secretKeyRef:
+               name: k8s-publisher-secrets
+               key: slack-api-token
+         - name: SLACK_USERNAME
+           value: k8s-notifier
