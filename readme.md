@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zmalik/k8s-publisher.svg?branch=master)](https://travis-ci.org/zmalik/k8s-publisher)
+
 # k8s-publisher
 
 A simple kubernetes controller that watches pods for any changes and notify to sinks based on pods annotations
