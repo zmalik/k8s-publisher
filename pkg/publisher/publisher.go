@@ -19,7 +19,7 @@ type Notifier struct {
 	Value string `json:"value,omitempty" protobuf:"bytes,2,opt,name=value"`
 }
 
-func Process(key string, item interface{}) {
+func (p *Publisher) Process(key string, item interface{}) {
 	if item == nil {
 		// Pod was deleted
 	} else {
@@ -28,17 +28,17 @@ func Process(key string, item interface{}) {
 			logrus.Errorf("Wrong object while adding the pod : %v", item)
 		} else {
 			// check the annotations to get the notify channels
-			if channels, exists := getNotifyChannels(pod.Annotations); exists {
+			if channels, exists := p.getNotifyChannels(pod.Annotations); exists {
 				// process rest of cases, based on pod phase
 				if len(pod.Status.ContainerStatuses) > 0 {
-					processPodStatusesInParallel(key, getPodStatus(key, pod), channels)
+					p.processPodStatusesInParallel(p.getPodStatus(key, pod), channels)
 				}
 			}
 		}
 	}
 }
 
-func getNotifyChannels(annotations map[string]string) (Notifiers, bool) {
+func (p *Publisher) getNotifyChannels(annotations map[string]string) (Notifiers, bool) {
 	if notifiers, exists := annotations["notify-channels"]; exists {
 		ntfiers := make(Notifiers, 0)
 		err := json.Unmarshal([]byte(notifiers), &ntfiers)
@@ -51,7 +51,7 @@ func getNotifyChannels(annotations map[string]string) (Notifiers, bool) {
 
 }
 
-func processPodStatusesInParallel(key string, podStatus *PodStatus, notifiersList Notifiers) {
+func (p *Publisher) processPodStatusesInParallel(podStatus *PodStatus, notifiersList Notifiers) {
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(len(notifiersList))
 
@@ -60,12 +60,12 @@ func processPodStatusesInParallel(key string, podStatus *PodStatus, notifiersLis
 	for _, notifier := range notifiersList {
 		go func() {
 			defer waitGroup.Done()
-			notify(notifier.Type, notifier.Value, podStatus)
+			p.notify(notifier.Type, notifier.Value, podStatus)
 		}()
 	}
 }
 
-func getPodStatus(key string, pod *v1.Pod) *PodStatus {
+func (p *Publisher) getPodStatus(key string, pod *v1.Pod) *PodStatus {
 	podStatus := &PodStatus{
 		PodName: key,
 		Phase:   string(pod.Status.Phase),
@@ -109,7 +109,7 @@ func getPodStatus(key string, pod *v1.Pod) *PodStatus {
 	return podStatus
 }
 
-func notify(kind, value string, podStatus *PodStatus) {
+func (p *Publisher) notify(kind, value string, podStatus *PodStatus) {
 	switch kind {
 	// TODO add more plugins like http/stdout/email
 	case "slack":

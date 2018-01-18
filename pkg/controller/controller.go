@@ -23,11 +23,13 @@ type Controller struct {
 	queue      workqueue.RateLimitingInterface
 	informer   cache.SharedIndexInformer
 	maxRetries int
+	pub        publisher.Publisher
 }
 
 func NewController(cfg *rest.Config) *Controller {
 	return &Controller{
 		cfg: cfg,
+		pub: publisher.Publisher{},
 	}
 }
 
@@ -126,6 +128,6 @@ func (c *Controller) processItem(key string) error {
 		return fmt.Errorf("error fetching object with key %s from store: %v", key, err)
 	}
 
-	publisher.Process(key, obj)
+	c.pub.Process(key, obj)
 	return nil
 }
