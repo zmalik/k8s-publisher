@@ -2,9 +2,9 @@
 
 # k8s-publisher
 
-A simple kubernetes controller that watches pods for any changes and notify to sinks based on pods annotations
+A simple kubernetes controller that watches pods for any changes and notify to sinks or trigger actions based on pods annotations
 
-The idea behing k8s-publisher is to empower pod level custom channels, and avoid a super sink to aggregate all events of a kubernetes cluster. And make it easy a pod diagnostic in case of naive errors.
+The idea behind k8s-publisher is to empower pod level custom channels, and avoid a super sink to aggregate all events of a kubernetes cluster. And make it easy a pod diagnostic in case of naive errors.
 
 
 
