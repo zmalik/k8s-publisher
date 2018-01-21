@@ -5,7 +5,8 @@ metadata:
   namespace: default
   annotations:
       # Tell k8s-publisher to send notifications of failure to slack #my-channel
-    notify-channels: "[{\"type\":\"slack\", \"value\":\"#my-channel\"}]"
+    notify-channels: |
+      [{"type":"slack", "value":"#my-channel"}]
 spec:
   containers:
   - image: busybox

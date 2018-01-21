@@ -15,7 +15,8 @@ The very first integration is with slack. You can define a slack channel to subs
 ```
 annotations:
   # Tell k8s-publisher to send notifications of failure to slack #my-channel
-  notify-channels: "[{\"type\":\"slack\", \"value\":\"#my-channel\"}]"
+  notify-channels: |
+        [{"type":"slack", "value":"#my-channel"}]
 ```
 
 And the k8s-publisher takes care of publishing messages related to the pod to that channel.
