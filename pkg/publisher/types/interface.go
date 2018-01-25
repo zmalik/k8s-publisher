@@ -11,32 +11,32 @@ const (
 
 type PodStatus struct {
 	//pod Name with the format <namespace>/<name> unless namespace is empty
-	PodName string
+	PodName string `json:"podName,omitempty"`
 
-	Phase string
+	Phase string `json:"phase,omitempty"`
 
-	ContainersStates []ContainerState
+	ContainersStates []ContainerState `json:"containerStates,omitempty"`
 
 	// Deletion timestamp, will be only populated it its phase is marked to be deleted
-	DeletedAt time.Time
+	DeletedAt time.Time `json:"deletedAt,omitempty"`
 }
 
 type ContainerState struct {
 	// Can be running, terminated or waiting
-	State string
+	State string `json:"state,omitempty"`
 
 	// Exit code, will be only populated it its terminated
-	ExitCode int32
+	ExitCode int32 `json:"exitCode,omitempty"`
 
 	// Container Image
-	Image string
+	Image string `json:"image,omitempty"`
 
 	// Reason of the state. Running state has no reason
-	Reason string
+	Reason string `json:"reason,omitempty"`
 
 	// Message with the state. Running state has no message
-	Message string
+	Message string `json:"message,omitempty"`
 
 	// Container when it started. Only present with Running state
-	StartedAt time.Time
+	StartedAt time.Time `json:"startedAt,omitempty"`
 }

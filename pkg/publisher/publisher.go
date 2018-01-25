@@ -7,6 +7,7 @@ import (
 	. "github.com/zmalik/k8s-publisher/pkg/publisher/types"
 	"k8s.io/api/core/v1"
 	"sync"
+	"github.com/zmalik/k8s-publisher/pkg/publisher/http"
 )
 
 type Publisher struct {
@@ -111,9 +112,11 @@ func (p *Publisher) getPodStatus(key string, pod *v1.Pod) *PodStatus {
 
 func (p *Publisher) notify(kind, value string, podStatus *PodStatus) {
 	switch kind {
-	// TODO add more plugins like http/stdout/email
+	// TODO add more plugins like stdout/email
 	case "slack":
 		slack.Publish(value, podStatus)
+	case "http":
+		http.Publish(value, podStatus)
 	default:
 		logrus.Warnf("Using a notifier type that isn't supported: %s with value %s", kind, value)
 	}
