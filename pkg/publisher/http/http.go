@@ -17,7 +17,7 @@ func Publish(endpoint string, podStatus *types.PodStatus) {
 	if err != nil{
 		log.Errorf("Error posting the pod status: %s", err.Error())
 	}
-	if resp.StatusCode >= 300 {
+	if resp.StatusCode > 399 {
 		log.Errorf("Expected: {1,2}xx publishing the pod status, got: %d", resp.StatusCode)
 	}
 }
