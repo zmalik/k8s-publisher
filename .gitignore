@@ -1,1 +1,3 @@
 .idea/*
+vendor/*
+k8s-publisher

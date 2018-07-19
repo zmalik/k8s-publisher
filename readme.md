@@ -21,6 +21,21 @@ annotations:
 
 And the k8s-publisher takes care of publishing messages related to the pod to that channel.
 
+
+## Http integration
+
+The very first integration is with slack. You can define a slack channel to subscribe for a pod.
+
+```
+annotations:
+  # Tell k8s-publisher to send notifications of failure to endpoint
+  notify-channels: |
+        [{"type":"http", "value":"http://myendpoint.com/webhook"}]
+```
+
+And the k8s-publisher takes care of publishing messages related to the pod to that channel.
+
+
 ## Installation
 
 ```
@@ -43,4 +58,4 @@ A k8s-publisher pod will run and keep an eye on all pods and keep checking for t
 
 ## Work in Progress
 
-This is a work in progress to add more integrations like http/stdout or email.
+This is a work in progress to add more integrations like stdout or email.
